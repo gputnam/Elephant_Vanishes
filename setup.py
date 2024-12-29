@@ -3,6 +3,7 @@ from pybind11.setup_helpers import Pybind11Extension, build_ext
 import subprocess
 import os
 import pathlib
+import time
 
 def readme():
     with open('README.md') as f:
@@ -84,6 +85,10 @@ class build_ext_wcmake(build_ext):
         if not self.dry_run:
             self.spawn(['cmake', '--build', '.'] + build_args)
             self.spawn(['cmake', '--install', '.'] + build_args)
+
+        self.announce("SLEEPINGGGG", level=3)
+        time.sleep(100)
+
         # Troubleshooting: if fail on line above then delete all possible 
         # temporary CMake files including "CMakeCache.txt" in top level dir.
         os.chdir(str(cwd))

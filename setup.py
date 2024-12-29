@@ -29,18 +29,20 @@ def usrinc():
     ]
     return [d for d in dirs if os.path.exists(d)]
 
+CMAKE_INSTALL = ""
+
 def localinc():
     dirs = [
 	'install/include',
 	'install/include/eigen3',
     ]
-    return dirs
+    return [CMAKE_INSTALL + d for d in dirs]
 
 def locallib():
     dirs = [
         "install/lib"
     ]
-    return dirs
+    return [CMAKE_INSTALL + d for d in dirs]
 
 
 # From: https://stackoverflow.com/questions/42585210/extending-setuptools-extension-to-use-cmake-in-setup-py
@@ -74,6 +76,10 @@ class build_ext_wcmake(build_ext):
             '-DCMAKE_BUILD_TYPE=' + config
         ]
 
+        # Tell pybind where we are installing everything
+        global CMAKE_INSTALL
+        CMAKE_INSTALL = str(extdir.parent.absolute()) + "/"
+
         # example of build args
         build_args = [
             '--config', config,
@@ -86,8 +92,8 @@ class build_ext_wcmake(build_ext):
             self.spawn(['cmake', '--build', '.'] + build_args)
             self.spawn(['cmake', '--install', '.'] + build_args)
 
-        self.announce("SLEEPINGGGG", level=3)
-        time.sleep(100)
+        # self.announce("SLEEPINGGGG", level=3)
+        # time.sleep(100)
 
         # Troubleshooting: if fail on line above then delete all possible 
         # temporary CMake files including "CMakeCache.txt" in top level dir.

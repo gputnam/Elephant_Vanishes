@@ -77,8 +77,8 @@ class build_ext_wcmake(build_ext):
         ]
 
         # Tell pybind where we are installing everything
-        global CMAKE_INSTALL
-        CMAKE_INSTALL = str(extdir.parent.absolute()) + "/"
+        # global CMAKE_INSTALL
+        # CMAKE_INSTALL = str(extdir.parent.absolute()) + "/"
 
         # example of build args
         build_args = [

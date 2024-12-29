@@ -145,7 +145,7 @@ target_link_libraries(PROfit_dict PRIVATE ${ROOT_LIBRARIES})
 # Install the SBNANAOBJ headers 
 install(
   DIRECTORY ${SBNANAOBJ_INCLUDE_DIR}/sbnanaobj/StandardRecord/
-  DESTINATION  ${CMAKE_INSTALL_PREFIX}/include/sbnanaobj
+  DESTINATION  ${CMAKE_INSTALL_PREFIX}/include/sbnanaobj/StandardRecord/
   FILES_MATCHING PATTERN "*.h"
 )
 

@@ -29,20 +29,18 @@ def usrinc():
     ]
     return [d for d in dirs if os.path.exists(d)]
 
-CMAKE_INSTALL = ""
-
 def localinc():
     dirs = [
-	'install/include',
-	'install/include/eigen3',
+	'{CMAKE_INSTALL}install/include',
+	'{CMAKE_INSTALL}install/include/eigen3',
     ]
-    return [CMAKE_INSTALL + d for d in dirs]
+    return dirs 
 
 def locallib():
     dirs = [
-        "install/lib"
+        "{CMAKE_INSTALL}install/lib"
     ]
-    return [CMAKE_INSTALL + d for d in dirs]
+    return dirs
 
 
 # From: https://stackoverflow.com/questions/42585210/extending-setuptools-extension-to-use-cmake-in-setup-py
@@ -53,9 +51,17 @@ class CMakeExtension(Extension):
 
 class build_ext_wcmake(build_ext):
     def run(self):
+        self.cmake_install = ""
+
         for ext in self.extensions:
             if isinstance(ext, CMakeExtension):
                 self.build_cmake(ext)
+
+        # Set CMake install location in extensions
+        for ext in self.extensions:
+            ext.include_dirs = [s.replace("{CMAKE_INSTALL}", self.cmake_install) for s in ext.include_dirs]
+            ext.library_dirs = [s.replace("{CMAKE_INSTALL}", self.cmake_install) for s in ext.library_dirs]
+
         super().run()
 
     def build_cmake(self, ext):
@@ -77,8 +83,7 @@ class build_ext_wcmake(build_ext):
         ]
 
         # Tell pybind where we are installing everything
-        # global CMAKE_INSTALL
-        # CMAKE_INSTALL = str(extdir.parent.absolute()) + "/"
+        self.cmake_install = str(extdir.parent.absolute()) + "/"
 
         # example of build args
         build_args = [
@@ -91,9 +96,6 @@ class build_ext_wcmake(build_ext):
         if not self.dry_run:
             self.spawn(['cmake', '--build', '.'] + build_args)
             self.spawn(['cmake', '--install', '.'] + build_args)
-
-        # self.announce("SLEEPINGGGG", level=3)
-        # time.sleep(100)
 
         # Troubleshooting: if fail on line above then delete all possible 
         # temporary CMake files including "CMakeCache.txt" in top level dir.

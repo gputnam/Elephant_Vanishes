@@ -31,14 +31,14 @@ def usrinc():
 
 def localinc():
     dirs = [
-	'{CMAKE_INSTALL}install/include',
-	'{CMAKE_INSTALL}install/include/eigen3',
+	'{CMAKE_INSTALL}include',
+	'{CMAKE_INSTALL}include/eigen3',
     ]
     return dirs 
 
 def locallib():
     dirs = [
-        "{CMAKE_INSTALL}install/lib"
+        "{CMAKE_INSTALL}lib"
     ]
     return dirs
 
